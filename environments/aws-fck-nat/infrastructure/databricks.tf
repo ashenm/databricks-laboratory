@@ -50,5 +50,7 @@ data "databricks_aws_crossaccount_policy" "main" {
 }
 
 data "databricks_aws_bucket_policy" "main" {
-  bucket = aws_s3_bucket.databricks.bucket
+  bucket                   = aws_s3_bucket.databricks.bucket
+  aws_partition            = data.aws_partition.current.partition
+  databricks_e2_account_id = var.databricks_account_id
 }

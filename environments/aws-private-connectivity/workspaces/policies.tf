@@ -6,6 +6,6 @@ data "databricks_aws_unity_catalog_assume_role_policy" "main" {
 
 data "databricks_aws_unity_catalog_policy" "main" {
   aws_account_id = data.aws_caller_identity.current.account_id
-  bucket_name    = aws_s3_bucket.unity_catalog.bucket
+  bucket_name    = local.unity_catalog_bucket_name
   role_name      = local.unity_catalog_role_name
 }

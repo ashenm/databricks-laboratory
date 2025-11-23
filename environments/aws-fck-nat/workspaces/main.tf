@@ -1,3 +1,9 @@
+resource "databricks_disable_legacy_access_setting" "main" {
+  disable_legacy_access {
+    value = true
+  }
+}
+
 resource "databricks_cluster" "main" {
   cluster_name            = "Autoscaling"
   spark_version           = data.databricks_spark_version.latest.id

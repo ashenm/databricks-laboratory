@@ -1,3 +1,13 @@
+locals {
+  unity_catalog_bucket_name = lower("${var.name_prefix}-unity-catalog")
+}
+
+resource "databricks_disable_legacy_access_setting" "main" {
+  disable_legacy_access {
+    value = true
+  }
+}
+
 resource "databricks_cluster" "main" {
   cluster_name            = "Autoscaling"
   spark_version           = "17.3.x-scala2.13"
@@ -21,18 +31,19 @@ resource "databricks_cluster" "main" {
   }
 
   spark_env_vars = {
-    AWS_MAX_RETRIES = "1"
+    AWS_MAX_RETRIES       = "1"
+    ENABLE_DATABRICKS_CLI = "false"
   }
 }
 
-# resource "databricks_sql_endpoint" "main" {
-#   name             = "Default"
-#   cluster_size     = "X-Small"
-#   min_num_clusters = 1
-#   max_num_clusters = 1
-#   auto_stop_mins   = 15
-#   warehouse_type   = "PRO"
-# }
+resource "databricks_sql_endpoint" "main" {
+  name             = "Default"
+  cluster_size     = "X-Small"
+  min_num_clusters = 1
+  max_num_clusters = 1
+  auto_stop_mins   = 15
+  warehouse_type   = "PRO"
+}
 
 data "aws_caller_identity" "current" {}
 
