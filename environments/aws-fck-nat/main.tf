@@ -2,6 +2,14 @@ locals {
   name_prefix = upper("${var.environment}-${var.project}")
 }
 
+provider "aws" {
+  default_tags {
+    tags = {
+      Owner = "hewagallage.gunaratne@databricks.com"
+    }
+  }
+}
+
 provider "databricks" {
   alias      = "mws"
   account_id = var.databricks_account_id
