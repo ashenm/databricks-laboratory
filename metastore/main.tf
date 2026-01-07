@@ -13,7 +13,6 @@ provider "databricks" {}
 resource "databricks_metastore" "main" {
   name          = var.metastore_name
   force_destroy = true
-  owner         = databricks_group.sudoers.display_name
   region        = var.aws_region
 
   lifecycle {
@@ -23,4 +22,13 @@ resource "databricks_metastore" "main" {
 
 resource "databricks_group" "sudoers" {
   display_name = lower("${var.metastore_name}-sudoers")
+}
+
+resource "databricks_group_member" "sudoer" {
+  group_id  = databricks_group.sudoers.id
+  member_id = data.databricks_user.sudoer.id
+}
+
+data "databricks_user" "sudoer" {
+  user_name = "hewagallage.gunaratne@databricks.com"
 }

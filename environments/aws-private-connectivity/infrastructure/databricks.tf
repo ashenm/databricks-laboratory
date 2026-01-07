@@ -66,6 +66,17 @@ resource "databricks_mws_private_access_settings" "main" {
   public_access_enabled        = true
 }
 
+resource "databricks_mws_permission_assignment" "sudoers" {
+  workspace_id = databricks_mws_workspaces.main.workspace_id
+  principal_id = data.databricks_group.sudoers.id
+  permissions  = ["ADMIN"]
+  depends_on   = [databricks_metastore_assignment.main]
+}
+
+data "databricks_group" "sudoers" {
+  display_name = "one-env-laboratory-sudoers"
+}
+
 data "databricks_aws_assume_role_policy" "main" {
   external_id = var.databricks_account_id
 }
