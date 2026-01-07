@@ -8,7 +8,9 @@ provider "aws" {
   }
 }
 
-provider "databricks" {}
+provider "databricks" {
+  host = "https://accounts.cloud.databricks.com"
+}
 
 resource "databricks_metastore" "main" {
   name          = var.metastore_name
