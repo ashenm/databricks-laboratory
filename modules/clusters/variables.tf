@@ -1,0 +1,27 @@
+variable "name_prefix" {
+  type    = string
+  default = null
+}
+
+variable "clusters" {
+  type = map(object({
+    name                    = optional(string)
+    node_type_id            = optional(string)
+    data_security_mode      = optional(string)
+    driver_node_type_id     = optional(string)
+    num_workers             = optional(string)
+    runtime_engine          = optional(string)
+    spark_conf              = optional(map(string))
+    spark_version           = optional(string)
+    spark_env_vars          = optional(map(string))
+    autotermination_minutes = optional(number)
+    autoscale_min_workers   = optional(number)
+    autoscale_max_workers   = optional(number)
+    custom_tags             = optional(map(string))
+    no_wait                 = optional(bool)
+    permissions = list(object({
+      group     = string
+      privilege = string
+    }))
+  }))
+}

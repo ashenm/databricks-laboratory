@@ -1,0 +1,23 @@
+catalogs:
+  main:
+    name: starscream
+    storage_isolation: isolate
+    force_destroy: true
+    permissions: []
+  neptune:
+    name: neptune
+    storage_isolation: isolate
+    force_destroy: true
+    permissions: []
+
+schemas:
+  main:
+    catalog_name: neptune
+    storage_isolation: default
+    force_destroy: true
+    permissions: []
+  stars:
+    catalog_name: neptune
+    storage_isolation: isolate
+    force_destroy: true
+    permissions: []

@@ -1,0 +1,31 @@
+catalogs:
+  main:
+    name: voyager
+    storage_isolation: isolate
+    force_destroy: true
+    permissions: []
+    use_custom_kms_key: true
+  triangulum:
+    name: triangulum
+    storage_isolation: isolate
+    force_destroy: true
+    use_custom_kms_key: true
+    permissions:
+      - group: one-env-laboratory-sudoers
+        privileges: [ALL_PRIVILEGES]
+
+schemas:
+  main:
+    catalog_name: triangulum
+    storage_isolation: default
+    force_destroy: true
+    permissions:
+      - group: one-env-laboratory-sudoers
+        privileges: [ALL_PRIVILEGES]
+  stars:
+    catalog_name: triangulum
+    storage_isolation: isolate
+    force_destroy: true
+    permissions:
+      - group: one-env-laboratory-sudoers
+        privileges: [ALL_PRIVILEGES]
