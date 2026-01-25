@@ -1,7 +1,3 @@
-locals {
-  cluster_permissions = merge([for key, cluster in var.clusters : { for permission in lookup(cluster, "permissions", []) : join("-", [key, permission.group]) => merge({ cluster = key }, permission) }]...)
-}
-
 resource "databricks_cluster" "clusters" {
   for_each            = var.clusters
   num_workers         = each.value.num_workers
@@ -23,17 +19,21 @@ resource "databricks_cluster" "clusters" {
 }
 
 resource "databricks_permissions" "clusters" {
-  for_each   = local.cluster_permissions
-  cluster_id = databricks_cluster.clusters[each.value.cluster].id
+  for_each   = var.clusters
+  cluster_id = databricks_cluster.clusters[each.key].id
 
-  access_control {
-    group_name       = data.databricks_group.clusters[each.value.group].display_name
-    permission_level = each.value.privilege
+  dynamic "access_control" {
+    for_each = coalesce(each.value.permissions, [])
+
+    content {
+      group_name       = data.databricks_group.clusters[access_control.value.group].display_name
+      permission_level = access_control.value.privilege
+    }
   }
 }
 
 data "databricks_group" "clusters" {
-  for_each     = toset([for key, cluster_permission in local.cluster_permissions : cluster_permission.group])
+  for_each     = toset(flatten([for key, cluster in var.clusters : [for permission in cluster.permissions : permission.group]]))
   display_name = each.key
 }
 
