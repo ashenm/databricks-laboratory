@@ -4,20 +4,20 @@ catalogs:
     storage_isolation: isolate
     force_destroy: true
     permissions: []
-  neptune:
-    name: neptune
+  kepler:
+    name: kepler
     storage_isolation: isolate
     force_destroy: true
     permissions: []
 
 schemas:
   main:
-    catalog_name: neptune
+    catalog_name: kepler
     storage_isolation: default
     force_destroy: true
     permissions: []
   stars:
-    catalog_name: neptune
+    catalog_name: kepler
     storage_isolation: isolate
     force_destroy: true
     permissions: []
