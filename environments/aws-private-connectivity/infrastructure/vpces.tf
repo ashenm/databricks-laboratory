@@ -39,11 +39,18 @@ locals {
       namespace           = "kinesis"
       private_dns_enabled = false
     }
+    monitoring = {
+      provider            = "aws"
+      namespace           = "monitoring"
+      private_dns_enabled = false
+    }
     rest = {
-      provider = "databricks", service = "com.amazonaws.vpce.ap-southeast-1.vpce-svc-02535b257fc253ff4"
+      provider = "databricks",
+      service  = "com.amazonaws.vpce.ap-southeast-1.vpce-svc-02535b257fc253ff4"
     }
     relay = {
-      provider = "databricks", service = "com.amazonaws.vpce.ap-southeast-1.vpce-svc-0557367c6fc1a0c5c"
+      provider = "databricks",
+      service  = "com.amazonaws.vpce.ap-southeast-1.vpce-svc-0557367c6fc1a0c5c"
     }
   }
 }
@@ -71,6 +78,10 @@ resource "aws_vpc_endpoint" "s3" {
   })
 
   tags = { Name = upper("${var.name_prefix}-s3") }
+
+  lifecycle {
+    ignore_changes = [tags["c7n_vpc_endpoint_unused_mce"]]
+  }
 }
 
 resource "aws_vpc_endpoint" "interfaces" {
@@ -82,6 +93,10 @@ resource "aws_vpc_endpoint" "interfaces" {
   security_group_ids  = [aws_security_group.vpce.id]
   vpc_endpoint_type   = data.aws_vpc_endpoint_service.interfaces[each.key].service_type
   tags                = { Name = upper("${var.name_prefix}-${each.key}") }
+
+  lifecycle {
+    ignore_changes = [tags["c7n_vpc_endpoint_unused_mce"]]
+  }
 }
 
 data "aws_vpc_endpoint_service" "interfaces" {
