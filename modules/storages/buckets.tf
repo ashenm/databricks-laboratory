@@ -33,9 +33,3 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "storages" {
     blocked_encryption_types = each.value.use_custom_kms_key == true ? ["SSE-C"] : null
   }
 }
-
-data "aws_s3_bucket" "storages" {
-  for_each   = var.storages
-  bucket     = local.storage_bucket_names[each.key]
-  depends_on = [aws_s3_bucket.storages]
-}

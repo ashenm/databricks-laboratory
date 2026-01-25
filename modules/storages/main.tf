@@ -1,6 +1,6 @@
 locals {
+  aws_account_id     = data.aws_caller_identity.current.account_id
   storage_role_names = { for key, value in var.storages : key => upper(join("-", compact([var.name_prefix, key]))) }
-  storage_role_arns  = { for key, value in local.storage_role_names : key => "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${value}" }
 }
 
 resource "databricks_storage_credential" "storages" {
@@ -10,14 +10,14 @@ resource "databricks_storage_credential" "storages" {
   force_destroy  = each.value.force_destroy
 
   aws_iam_role {
-    role_arn = local.storage_role_arns[each.key]
+    role_arn = "arn:aws:iam::${local.aws_account_id}:role/${local.storage_role_names[each.key]}"
   }
 }
 
 resource "databricks_external_location" "storages" {
   for_each        = var.storages
   name            = lower(join("-", compact([var.name_prefix, each.key])))
-  url             = "s3://${data.aws_s3_bucket.storages[each.key].id}/"
+  url             = "s3://${local.storage_bucket_names[each.key]}/"
   credential_name = databricks_storage_credential.storages[each.key].name
   isolation_mode  = "ISOLATION_MODE_ISOLATED"
   force_destroy   = each.value.force_destroy
@@ -29,7 +29,7 @@ resource "databricks_external_location" "storages" {
     }
   }
 
-  depends_on = [time_sleep.databricks_external_location]
+  depends_on = [aws_s3_bucket.storages, time_sleep.databricks_external_location]
 }
 
 resource "time_sleep" "databricks_external_location" {
