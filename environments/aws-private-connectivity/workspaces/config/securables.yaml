@@ -29,3 +29,12 @@ schemas:
     permissions:
       - group: one-env-laboratory-sudoers
         privileges: [ALL_PRIVILEGES]
+
+volumes:
+  cloudwatch:
+    catalog_name: triangulum
+    schema_name: main
+    force_destroy: true
+    permissions:
+      - group: one-env-laboratory-sudoers
+        privileges: [ALL_PRIVILEGES]

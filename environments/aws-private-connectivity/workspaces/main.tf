@@ -27,6 +27,12 @@ module "schemas" {
   depends_on = [module.catalogs]
 }
 
+module "volumes" {
+  source     = "../../../modules/volumes"
+  volumes    = lookup(local.configs, "volumes", {})
+  depends_on = [module.schemas]
+}
+
 module "instance_profiles" {
   source            = "../../../modules/instance-profiles"
   instance_profiles = local.instance_profiles
