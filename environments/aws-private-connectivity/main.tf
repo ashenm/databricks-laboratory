@@ -16,6 +16,7 @@ provider "aws" {
 
 provider "databricks" {
   alias      = "mws"
+  host       = "https://accounts.cloud.databricks.com"
   account_id = var.databricks_account_id
 }
 
