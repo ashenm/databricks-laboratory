@@ -1,7 +1,7 @@
-# output "infrastructure" {
-#   value = module.infrastructure
-# }
+output "infrastructure" {
+  value = module.infrastructure
+}
 
-# output "workspaces" {
-#   value = module.workspaces
-# }
+output "workspaces" {
+  value = module.workspaces
+}
