@@ -4,4 +4,5 @@ clusters:
     permissions:
       - group: one-env-laboratory-sudoers
         privilege: CAN_MANAGE
+    instance_profile: default
     no_wait: true

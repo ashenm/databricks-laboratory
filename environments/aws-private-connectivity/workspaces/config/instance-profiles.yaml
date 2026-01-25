@@ -1,0 +1,5 @@
+instance_profiles:
+  default:
+    policies:
+      - name: CloudWatchAgentServerPolicy
+        policy: cloudwatch_agent_serverpolicy
