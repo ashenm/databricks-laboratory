@@ -19,6 +19,7 @@ variable "clusters" {
     autoscale_max_workers   = optional(number)
     custom_tags             = optional(map(string))
     no_wait                 = optional(bool)
+    instance_profile_arn    = optional(string)
     permissions = list(object({
       group     = string
       privilege = string

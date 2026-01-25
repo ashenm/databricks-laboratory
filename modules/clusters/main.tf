@@ -13,6 +13,10 @@ resource "databricks_cluster" "clusters" {
     max_workers = coalesce(each.value.autoscale_max_workers, 1)
   }
 
+  aws_attributes {
+    instance_profile_arn = each.value.instance_profile_arn
+  }
+
   autotermination_minutes = coalesce(each.value.autotermination_minutes, 30)
   no_wait                 = each.value.no_wait
   custom_tags             = each.value.custom_tags
