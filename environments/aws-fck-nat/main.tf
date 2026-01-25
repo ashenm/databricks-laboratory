@@ -5,20 +5,23 @@ locals {
 provider "aws" {
   default_tags {
     tags = {
-      Owner = "hewagallage.gunaratne@databricks.com"
+      Owner       = "hewagallage.gunaratne@databricks.com"
+      Project     = upper(var.project)
+      Environment = upper(var.environment)
     }
   }
 }
 
 provider "databricks" {
   alias      = "mws"
+  host       = "https://accounts.cloud.databricks.com"
   account_id = var.databricks_account_id
 }
 
-# provider "databricks" {
-#   alias = "workspace"
-#   host  = module.infrastructure.workspace_url
-# }
+provider "databricks" {
+  alias = "workspace"
+  host  = module.infrastructure.workspace_url
+}
 
 module "infrastructure" {
   source                  = "./infrastructure"
@@ -29,9 +32,9 @@ module "infrastructure" {
   databricks_metastore_id = var.databricks_metastore_id
 }
 
-# module "workspaces" {
-#   source      = "./workspaces"
-#   name_prefix = local.name_prefix
-#   providers   = { databricks = databricks.workspace }
-#   depends_on  = [module.infrastructure]
-# }
+module "workspaces" {
+  source      = "./workspaces"
+  name_prefix = local.name_prefix
+  providers   = { databricks = databricks.workspace }
+  depends_on  = [module.infrastructure]
+}
