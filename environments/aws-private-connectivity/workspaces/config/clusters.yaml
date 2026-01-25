@@ -6,3 +6,9 @@ clusters:
         privilege: CAN_MANAGE
     instance_profile: default
     no_wait: true
+  auxiliary:
+    autotermination_minutes: 120
+    permissions:
+      - group: one-env-laboratory-sudoers
+        privilege: CAN_MANAGE
+    no_wait: true
