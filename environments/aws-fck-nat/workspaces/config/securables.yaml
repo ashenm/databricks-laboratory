@@ -1,3 +1,9 @@
+storages:
+  starscream:
+    force_destroy: true
+  kepler:
+    force_destroy: true
+
 catalogs:
   main:
     name: starscream

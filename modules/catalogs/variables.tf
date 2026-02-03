@@ -5,13 +5,12 @@ variable "name_prefix" {
 
 variable "catalogs" {
   type = map(object({
-    name              = optional(string)
-    storage_root      = optional(string)
-    storage_isolation = optional(string)
+    name          = optional(string)
+    storage_root  = optional(string)
+    force_destroy = optional(bool)
     permissions = list(object({
       group      = string
       privileges = list(string)
     }))
-    use_custom_kms_key = optional(bool)
   }))
 }

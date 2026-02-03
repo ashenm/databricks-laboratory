@@ -1,28 +1,16 @@
 data "aws_iam_policy_document" "storages" {
   for_each = var.storages
 
-  dynamic "statement" {
-    for_each = each.value.use_custom_kms_key == true ? [1] : []
-
-    content {
-      effect = "Allow"
-
-      actions = [
-        "kms:Decrypt",
-        "kms:Encrypt",
-        "kms:GenerateDataKey*"
-      ]
-
-      resources = [aws_kms_key.storages[each.key].arn]
-    }
-  }
-
-  # adding redundant empty allow statement
-  # in case all dynamic statements resolves to null
   statement {
-    effect    = "Allow"
-    actions   = ["none:null"]
-    resources = ["*"]
+    effect = "Allow"
+
+    actions = [
+      "kms:Decrypt",
+      "kms:Encrypt",
+      "kms:GenerateDataKey*"
+    ]
+
+    resources = [aws_kms_key.storages[each.key].arn]
   }
 }
 
@@ -33,7 +21,7 @@ data "aws_iam_policy_document" "kms" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.aws_account_id}:root"]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
     }
 
     resources = ["*"]
@@ -57,7 +45,7 @@ data "aws_iam_policy_document" "kms" {
 
     condition {
       test     = "StringEquals"
-      values   = [local.aws_account_id]
+      values   = [data.aws_caller_identity.current.account_id]
       variable = "kms:CallerAccount"
     }
 

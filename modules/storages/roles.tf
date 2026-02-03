@@ -18,14 +18,14 @@ resource "aws_iam_role_policy" "auxiliaries" {
 
 data "databricks_aws_unity_catalog_assume_role_policy" "storages" {
   for_each       = var.storages
-  aws_account_id = local.aws_account_id
+  aws_account_id = data.aws_caller_identity.current.account_id
   external_id    = one(databricks_storage_credential.storages[each.key].aws_iam_role.*.external_id)
   role_name      = local.storage_role_names[each.key]
 }
 
 data "databricks_aws_unity_catalog_policy" "storages" {
   for_each       = var.storages
-  aws_account_id = local.aws_account_id
+  aws_account_id = data.aws_caller_identity.current.account_id
   bucket_name    = local.storage_bucket_names[each.key]
   role_name      = local.storage_role_names[each.key]
 }

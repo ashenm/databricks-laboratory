@@ -5,9 +5,7 @@ variable "name_prefix" {
 
 variable "storages" {
   type = map(object({
-    bucket_name        = string
-    create_bucket      = optional(bool)
-    force_destroy      = optional(bool)
-    use_custom_kms_key = optional(bool)
+    bucket_name   = optional(string)
+    force_destroy = optional(bool)
   }))
 }

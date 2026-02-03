@@ -1,6 +1,6 @@
 locals {
-  aws_account_id     = data.aws_caller_identity.current.account_id
-  storage_role_names = { for key, value in var.storages : key => upper(join("-", compact([var.name_prefix, key]))) }
+  storage_role_names   = { for key, value in var.storages : key => upper(join("-", compact([var.name_prefix, key]))) }
+  storage_bucket_names = { for key, value in var.storages : key => coalesce(value.bucket_name, lower(replace(join("-", compact([var.name_prefix, key])), "_", "-"))) }
 }
 
 resource "databricks_storage_credential" "storages" {
@@ -10,7 +10,7 @@ resource "databricks_storage_credential" "storages" {
   force_destroy  = each.value.force_destroy
 
   aws_iam_role {
-    role_arn = "arn:aws:iam::${local.aws_account_id}:role/${local.storage_role_names[each.key]}"
+    role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.storage_role_names[each.key]}"
   }
 }
 
@@ -25,7 +25,7 @@ resource "databricks_external_location" "storages" {
   encryption_details {
     sse_encryption_details {
       algorithm       = "AWS_SSE_S3"
-      aws_kms_key_arn = each.value.use_custom_kms_key == true ? aws_kms_alias.storages[each.key].arn : "alias/aws/s3"
+      aws_kms_key_arn = aws_kms_alias.storages[each.key].arn
     }
   }
 
