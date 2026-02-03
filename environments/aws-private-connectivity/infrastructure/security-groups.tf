@@ -64,6 +64,13 @@ resource "aws_security_group" "databricks" {
     ipv6_cidr_blocks = []
   }
 
+  ingress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = [aws_security_group.bastion.id]
+  }
+
   egress {
     from_port        = 0
     to_port          = 0
