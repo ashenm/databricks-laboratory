@@ -23,7 +23,6 @@ catalogs:
 schemas:
   main:
     catalog_name: triangulum
-    storage_isolation: default
     force_destroy: true
     permissions:
       - group: one-env-laboratory-sudoers
