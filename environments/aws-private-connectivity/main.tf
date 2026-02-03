@@ -41,12 +41,12 @@ module "workspaces" {
   depends_on  = [module.infrastructure]
 }
 
-# module "serverless" {
-#   source                  = "./serverless"
-#   name_prefix             = local.name_prefix
-#   databricks_workspace_id = module.infrastructure.workspace_id
-#   project_name            = var.project
-#   environment             = var.environment
-#   providers               = { databricks = databricks.mws }
-#   depends_on              = [module.infrastructure, module.workspaces]
-# }
+module "serverless" {
+  source                  = "./serverless"
+  name_prefix             = local.name_prefix
+  databricks_workspace_id = module.infrastructure.workspace_id
+  project_name            = var.project
+  environment             = var.environment
+  providers               = { databricks = databricks.mws }
+  depends_on              = [module.infrastructure, module.workspaces]
+}
