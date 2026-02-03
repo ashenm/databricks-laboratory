@@ -5,10 +5,14 @@ clusters:
       - group: one-env-laboratory-sudoers
         privilege: CAN_MANAGE
     instance_profile: default
+    data_security_mode: SINGLE_USER
+    single_user_name: one-env-laboratory-sudoers
     no_wait: true
   auxiliary:
     autotermination_minutes: 120
     permissions:
       - group: one-env-laboratory-sudoers
         privilege: CAN_MANAGE
+    data_security_mode: SINGLE_USER
+    single_user_name: one-env-laboratory-sudoers
     no_wait: true

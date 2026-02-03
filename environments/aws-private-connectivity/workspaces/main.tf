@@ -8,6 +8,7 @@ locals {
 
   clusters = { for key, value in lookup(local.configs, "clusters", {}) : key => merge(value, {
     instance_profile_arn = lookup(value, "instance_profile", null) != null ? module.instance_profiles.instance_profiles[value.instance_profile].id : null
+    ssh_public_keys      = [local.vault["sudoers-public-key-openssh"]]
   }) }
 
   instance_profile_policies = {
@@ -17,6 +18,20 @@ locals {
   instance_profiles = { for key, value in lookup(local.configs, "instance_profiles", {}) : key => merge(value, {
     policies = [for idx, policy in value.policies : merge(policy, { policy = local.instance_profile_policies[policy.policy] })]
   }) }
+
+  vault = jsondecode(data.aws_secretsmanager_secret_version.vault.secret_string)
+}
+
+data "aws_secretsmanager_secret_version" "vault" {
+  secret_id     = one(data.aws_secretsmanager_secrets.vault.arns)
+  version_stage = "AWSCURRENT"
+}
+
+data "aws_secretsmanager_secrets" "vault" {
+  filter {
+    name   = "name"
+    values = ["one-env-laboratory"]
+  }
 }
 
 module "storages" {
@@ -52,7 +67,7 @@ module "instance_profiles" {
 
 module "clusters" {
   source      = "../../../modules/clusters"
-  clusters    = local.configs.clusters
+  clusters    = local.clusters
   name_prefix = var.name_prefix
 }
 

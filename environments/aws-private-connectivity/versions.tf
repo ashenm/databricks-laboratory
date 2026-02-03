@@ -9,5 +9,13 @@ terraform {
       source  = "databricks/databricks"
       version = "1.103.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.8.1"
+    }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "4.1.0"
+    }
   }
 }

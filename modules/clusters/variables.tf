@@ -6,8 +6,10 @@ variable "name_prefix" {
 variable "clusters" {
   type = map(object({
     name                    = optional(string)
+    availability            = optional(string)
     node_type_id            = optional(string)
     data_security_mode      = optional(string)
+    single_user_name        = optional(string)
     driver_node_type_id     = optional(string)
     num_workers             = optional(string)
     runtime_engine          = optional(string)
@@ -20,6 +22,7 @@ variable "clusters" {
     custom_tags             = optional(map(string))
     no_wait                 = optional(bool)
     instance_profile_arn    = optional(string)
+    ssh_public_keys         = optional(list(string))
     permissions = list(object({
       group     = string
       privilege = string

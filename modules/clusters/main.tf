@@ -7,6 +7,8 @@ resource "databricks_cluster" "clusters" {
   node_type_id        = coalesce(each.value.node_type_id, data.databricks_node_type.smallest.id)
   driver_node_type_id = each.value.driver_node_type_id
   data_security_mode  = coalesce(each.value.data_security_mode, "USER_ISOLATION")
+  single_user_name    = each.value.single_user_name
+  ssh_public_keys     = each.value.ssh_public_keys
 
   autoscale {
     min_workers = coalesce(each.value.autoscale_min_workers, 1)
@@ -15,6 +17,7 @@ resource "databricks_cluster" "clusters" {
 
   aws_attributes {
     instance_profile_arn = each.value.instance_profile_arn
+    availability         = coalesce(each.value.availability, "ON_DEMAND")
   }
 
   autotermination_minutes = coalesce(each.value.autotermination_minutes, 30)
