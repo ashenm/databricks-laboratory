@@ -26,11 +26,11 @@ resource "databricks_cluster" "clusters" {
 }
 
 resource "databricks_permissions" "clusters" {
-  for_each   = var.clusters
+  for_each   = { for key, value in var.clusters : key => value if length(coalesce(value.permissions, [])) != 0 }
   cluster_id = databricks_cluster.clusters[each.key].id
 
   dynamic "access_control" {
-    for_each = coalesce(each.value.permissions, [])
+    for_each = each.value.permissions
 
     content {
       group_name       = data.databricks_group.clusters[access_control.value.group].display_name

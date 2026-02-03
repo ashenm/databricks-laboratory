@@ -3,9 +3,9 @@ variable "schemas" {
     name         = optional(string)
     catalog_name = string
     storage_root = optional(string)
-    permissions = list(object({
+    permissions = optional(list(object({
       group      = string
       privileges = list(string)
-    }))
+    })))
   }))
 }

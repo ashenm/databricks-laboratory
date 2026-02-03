@@ -6,11 +6,11 @@ resource "databricks_schema" "schemas" {
 }
 
 resource "databricks_grants" "schemas" {
-  for_each = var.schemas
+  for_each = { for key, value in var.schemas : key => value if length(coalesce(value.permissions, [])) != 0 }
   schema   = databricks_schema.schemas[each.key].id
 
   dynamic "grant" {
-    for_each = coalesce(each.value.permissions, [])
+    for_each = each.value.permissions
 
     content {
       principal  = data.databricks_group.schemas[grant.value.group].display_name

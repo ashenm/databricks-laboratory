@@ -6,11 +6,11 @@ resource "databricks_catalog" "catalogs" {
 }
 
 resource "databricks_grants" "catalogs" {
-  for_each = var.catalogs
   catalog  = databricks_catalog.catalogs[each.key].name
+  for_each = { for key, value in var.catalogs : key => value if length(coalesce(value.permissions, [])) != 0 }
 
   dynamic "grant" {
-    for_each = coalesce(each.value.permissions, [])
+    for_each = each.value.permissions
 
     content {
       principal  = data.databricks_group.catalogs[grant.value.group].display_name

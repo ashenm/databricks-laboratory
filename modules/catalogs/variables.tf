@@ -8,9 +8,9 @@ variable "catalogs" {
     name          = optional(string)
     storage_root  = optional(string)
     force_destroy = optional(bool)
-    permissions = list(object({
+    permissions = optional(list(object({
       group      = string
       privileges = list(string)
-    }))
+    })))
   }))
 }

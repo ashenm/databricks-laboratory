@@ -23,9 +23,9 @@ variable "clusters" {
     no_wait                 = optional(bool)
     instance_profile_arn    = optional(string)
     ssh_public_keys         = optional(list(string))
-    permissions = list(object({
+    permissions = optional(list(object({
       group     = string
       privilege = string
-    }))
+    })))
   }))
 }

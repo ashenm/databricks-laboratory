@@ -15,9 +15,9 @@ variable "cluster_policies" {
         exclusions  = optional(list(string))
       })))
     }))
-    permissions = list(object({
+    permissions = optional(list(object({
       group     = string
       privilege = string
-    }))
+    })))
   }))
 }

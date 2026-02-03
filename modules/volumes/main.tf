@@ -7,11 +7,11 @@ resource "databricks_volume" "volumes" {
 }
 
 resource "databricks_grants" "volumes" {
-  for_each = var.volumes
+  for_each = { for key, value in var.volumes : key => value if length(coalesce(value.permissions, [])) != 0 }
   volume   = databricks_volume.volumes[each.key].id
 
   dynamic "grant" {
-    for_each = coalesce(each.value.permissions, [])
+    for_each = each.value.permissions
 
     content {
       principal  = data.databricks_group.volumes[grant.value.group].display_name
