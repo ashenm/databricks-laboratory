@@ -11,4 +11,5 @@ resource "aws_iam_instance_profile" "instance_profiles" {
 resource "databricks_instance_profile" "instance_profiles" {
   for_each             = var.instance_profiles
   instance_profile_arn = aws_iam_instance_profile.instance_profiles[each.key].arn
+  depends_on           = [aws_iam_role_policy.delegations]
 }
