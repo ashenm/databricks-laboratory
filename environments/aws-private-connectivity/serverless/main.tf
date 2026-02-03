@@ -1,4 +1,4 @@
-resource "databricks_mws_network_connectivity_config" "ncc" {
+resource "databricks_mws_network_connectivity_config" "main" {
   name   = lower(var.name_prefix)
   region = data.aws_region.current.region
 }
@@ -15,15 +15,16 @@ resource "databricks_mws_network_connectivity_config" "ncc" {
 #   create_duration = "1m"
 # }
 
-resource "databricks_mws_ncc_private_endpoint_rule" "storage" {
-  network_connectivity_config_id = databricks_mws_network_connectivity_config.ncc.network_connectivity_config_id
+resource "databricks_mws_ncc_private_endpoint_rule" "main" {
+  network_connectivity_config_id = databricks_mws_network_connectivity_config.main.network_connectivity_config_id
   endpoint_service               = "${data.aws_partition.current.reverse_dns_prefix}.${data.aws_region.current.region}.s3"
   resource_names                 = [for resource in data.aws_resourcegroupstaggingapi_resources.buckets.resource_tag_mapping_list : replace(resource.resource_arn, "arn:aws:s3:::", "")]
 }
 
 resource "databricks_mws_ncc_binding" "main" {
   workspace_id                   = var.databricks_workspace_id
-  network_connectivity_config_id = databricks_mws_network_connectivity_config.ncc.network_connectivity_config_id
+  network_connectivity_config_id = databricks_mws_network_connectivity_config.main.network_connectivity_config_id
+  depends_on                     = [databricks_mws_ncc_private_endpoint_rule.main]
 }
 
 data "aws_vpc" "main" {
