@@ -11,10 +11,11 @@ provider "databricks" {
 }
 
 resource "databricks_metastore" "main" {
-  name          = var.metastore_name
-  force_destroy = true
-  region        = var.aws_region
-  owner         = databricks_group.sudoers.display_name
+  name                    = var.metastore_name
+  force_destroy           = true
+  region                  = var.aws_region
+  owner                   = databricks_group.sudoers.display_name
+  external_access_enabled = true
 
   delta_sharing_scope                               = "INTERNAL_AND_EXTERNAL"
   delta_sharing_recipient_token_lifetime_in_seconds = 2592000
@@ -22,10 +23,11 @@ resource "databricks_metastore" "main" {
 }
 
 resource "databricks_metastore" "auxiliary" {
-  name          = "${var.metastore_name}-auxiliary"
-  force_destroy = true
-  region        = var.aws_region_auxiliary
-  owner         = databricks_group.sudoers.display_name
+  name                    = "${var.metastore_name}-auxiliary"
+  force_destroy           = true
+  region                  = var.aws_region_auxiliary
+  owner                   = databricks_group.sudoers.display_name
+  external_access_enabled = true
 
   delta_sharing_scope                               = "INTERNAL_AND_EXTERNAL"
   delta_sharing_recipient_token_lifetime_in_seconds = 2592000
