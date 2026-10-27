@@ -1,9 +1,10 @@
 resource "databricks_schema" "schemas" {
-  for_each     = var.schemas
-  name         = lower(coalesce(each.value.name, replace(each.key, "-", "_")))
-  catalog_name = data.databricks_catalog.schemas[each.value.catalog_name].name
-  storage_root = each.value.storage_root
-  owner        = each.value.owner
+  for_each      = var.schemas
+  name          = lower(coalesce(each.value.name, replace(each.key, "-", "_")))
+  catalog_name  = data.databricks_catalog.schemas[each.value.catalog_name].name
+  storage_root  = each.value.storage_root
+  force_destroy = each.value.force_destroy
+  owner         = each.value.owner
 }
 
 resource "databricks_grants" "schemas" {
