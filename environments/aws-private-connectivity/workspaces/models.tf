@@ -4,6 +4,10 @@ resource "databricks_ai_gateway_model_service" "whitelist_models" {
   model_service_id = each.key
 
   config = {
+    inference_table = {
+      parent            = "schemas/${module.schemas.schemas["ai"].id}"
+      table_name_prefix = replace(each.key, "-", "_")
+    }
     routing = {
       destinations = [
         {
@@ -18,7 +22,6 @@ resource "databricks_ai_gateway_model_service" "whitelist_models" {
     }
   }
 }
-
 
 data "external" "whitelist_models" {
   program = ["python3", "${path.module}/../../../externals/get-whitelist-models.py"]
