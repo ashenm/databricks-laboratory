@@ -9,6 +9,8 @@ locals {
   clusters = { for key, value in lookup(local.configs, "clusters", {}) : key => merge(value, {
     libraries = concat(lookup(value, "libraries", []), [for idx, value in module.baselines.drivers : { type = value.type, destination = value.path }])
   }) }
+
+  warehouses = lookup(local.configs, "warehouses", {})
 }
 
 module "storages" {
@@ -41,6 +43,12 @@ module "clusters" {
   clusters    = local.clusters
   name_prefix = var.name_prefix
   depends_on  = [databricks_artifact_allowlist.init]
+}
+
+module "warehouses" {
+  source      = "../../../modules/warehouses"
+  warehouses  = local.warehouses
+  name_prefix = var.name_prefix
 }
 
 module "baselines" {
