@@ -1,0 +1,3 @@
+variable "schema" {
+  type = string
+}

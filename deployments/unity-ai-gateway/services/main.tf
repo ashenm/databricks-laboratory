@@ -1,11 +1,11 @@
 resource "databricks_ai_gateway_model_service" "whitelist_models" {
   for_each         = toset(jsondecode(data.external.whitelist_models.result.models))
-  parent           = "schemas/${module.schemas.schemas["ai"].id}"
+  parent           = "schemas/${data.databricks_schema.whitelist_models.id}"
   model_service_id = each.key
 
   config = {
     inference_table = {
-      parent            = "schemas/${module.schemas.schemas["ai"].id}"
+      parent            = "schemas/${data.databricks_schema.whitelist_models.id}"
       table_name_prefix = replace(each.key, "-", "_")
     }
     routing = {
@@ -23,10 +23,16 @@ resource "databricks_ai_gateway_model_service" "whitelist_models" {
   }
 }
 
+data "databricks_schema" "whitelist_models" {
+  name = var.schema
+}
+
 data "external" "whitelist_models" {
-  program = ["python3", "${path.module}/../../../externals/get-whitelist-models.py"]
+  program = ["python3", "${path.module}/externals/get-whitelist-models.py"]
 
   query = {
     host = data.databricks_current_user.current.workspace_url
   }
 }
+
+data "databricks_current_user" "current" {}

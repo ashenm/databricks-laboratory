@@ -6,7 +6,7 @@ from typing import Match, Optional, Pattern, TypedDict
 from sys import stdin
 
 REGEXP_MODEL_NAME: Pattern = re.compile(r"^databricks-(?P<class>[a-zA-Z0-9]+)-[a-zA-Z0-9-]+$")
-WHITELIST_MODEL_CLASSES: list[str] = ["claude", "gpt"]
+WHITELIST_MODEL_CLASSES: list[str] = ["claude", "gpt", "gpt-oss"]
 
 
 class Query(TypedDict):
