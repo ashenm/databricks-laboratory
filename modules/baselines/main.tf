@@ -39,7 +39,12 @@ locals {
       maxValue   = 4
       isOptional = true
     }
+    "init_scripts.0.volumes.destination" = {
+      type  = "fixed"
+      value = databricks_file.scripts["init.sh"].path
+    }
   }
+
   create_team_policies  = contains(var.cluster_policies, "team")
   __count_team_policies = local.create_team_policies ? 1 : 0
   create_user_policies  = contains(var.cluster_policies, "user")
@@ -73,6 +78,12 @@ resource "databricks_cluster_policy" "job_compute_user" {
     }
   }))
   max_clusters_per_user = 1
+}
+
+resource "databricks_file" "scripts" {
+  for_each = fileset("${path.module}/scripts", "**")
+  source   = "${path.module}/scripts/${each.key}"
+  path     = "${var.volume_path}/${each.key}"
 }
 
 data "databricks_current_user" "current" {}
